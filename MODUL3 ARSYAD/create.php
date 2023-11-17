@@ -42,6 +42,5 @@ include('connect.php');
 
 
 // (7) Tutup koneksi ke database setelah selesai menggunakan database
-// $mysqli -> close();
-
+    $mysqli -> close();
 ?>
