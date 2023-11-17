@@ -15,9 +15,8 @@
             include("connect.php");
 
             // Buatlah query untuk mengambil data dari database (gunakan query SELECT)
-        $query = "SELECT * FROM showroom_mobil"
-            
-            
+        $query = "SELECT * FROM showroom_mobil";
+        $result = mysqli_query($connect, $query);
 
             // Buatlah perkondisian dimana: 
             // 1. a. Apabila ada data dalam database, maka outputnya adalah semua data dalam database akan ditampilkan dalam bentuk tabel 
@@ -27,23 +26,12 @@
             // 2. Apabila tidak ada data dalam database, maka outputnya adalah pesan 'tidak ada data dalam tabel'
 
             //<!--  **********************  1  **************************     -->
-        mysqli_num_rows($result);
-        if (mysqli_num_rows($result) > 0) { 
-        while($row = mysqli_fetch_assoc($result)) { 
-            echo "id: " . $id["id"]. " - Nama : " . $nama["nama mobil"]. " " . $brand["brand mobil"]. " " . $warna["warna mobil"]. " " . $tipe ["tipe mobil"]. "" . $harga["harga mobil"]. " <br>"; 
-        } 
-        } else { 
-        echo "0 hasil"; 
-        }
-        
-        $target = "form_detail_mobil.php";
-        $id = "id"
-
-        link($target, id);
-            
-
-
-
+            if ($result !== false && mysqli_num_rows($result) > 0) { 
+                while($row = mysqli_fetch_assoc($result)) {
+                    echo "id: " . $row["id"]. " - Nama : " . $row["nama_mobil"]. " " . $row["brand_mobil"]. " " . $row["warna_mobil"]. " " . $row["tipe_mobil"]. " " . $row["harga_mobil"]. " <br>"; 
+                    echo "<a href='form_detail_mobil.php?id=" . $row["id"] . "'>Detail</a><br>";
+                } 
+            } 
 
 
 
@@ -51,17 +39,14 @@
             //<!--  **********************  1  **************************     -->
 
             //<!--  **********************  2  **************************     -->
+            else { 
+                echo "Tidak ada data dalam tabel"; 
+            }
 
-            
-            
-
-            if ($mysqli -> connect_errno) {
-                echo "tidak ada dalam tabel " . $mysqli -> connect_error;
-                exit();
-              }
-            
-            //<!--  **********************  2  **************************     -->
+            mysqli_close($connect);
             ?>
+
+            //<!--  **********************  2  **************************     -->
         </div>
     </center>
 </body>
