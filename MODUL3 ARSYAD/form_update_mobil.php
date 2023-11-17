@@ -9,11 +9,26 @@
         <?php 
             include("navbar.php");
             include("connect.php");
-            $id = $_GET['id'];
             // Buatlah query untuk mengambil masing-masing data berdasarkan id dari database (gunakan fungsi GET dan mysqli_fetch_assoc() 
             // serta query SELECT dan WHERE)
-            $select = SELECT showroom_mobil SET nama_mobil='supra', brand_mobil='toyota', warna_mobil='hitam', tipe_mobil='sedan', harga_mobil='1000000000' WHERE id_mobil='1'";
-
+            if(isset($_GET['id'])) {
+                $id = $_GET['id'];
+                $query = mysqli_query($connect, "SELECT * FROM showroom_mobil WHERE id_mobil='$id'");
+                if(mysqli_num_rows($query) > 0) {
+                    $data = mysqli_fetch_assoc($query);
+                    $nama_mobil = $data['nama_mobil'];
+                    $brand_mobil = $data['brand_mobil'];
+                    $warna_mobil = $data['warna_mobil'];
+                    $tipe_mobil = $data['tipe_mobil'];
+                    $harga_mobil = $data['harga_mobil'];
+                } else {
+                    echo "Data tidak ditemukan";
+                    exit();
+                }
+            } else {
+                echo "ID tidak ditemukan";
+                exit();
+            }
 
 
             //
