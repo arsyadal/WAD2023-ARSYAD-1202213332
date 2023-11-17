@@ -9,23 +9,36 @@
         <?php 
             include("navbar.php");
             include("connect.php");
-            $id = $_GET['id'];
             // Buatlah query untuk mengambil masing-masing data berdasarkan id dari database (gunakan fungsi GET dan mysqli_fetch_assoc() 
             // serta query SELECT dan WHERE)
-            
-if ($result->num_rows > 0) {
-  // output data of each row
-  while($row = $result->fetch_assoc()) {
-    echo "id " . $_GET['id'] . " nama mobil " . $_GET['nama'] . " brand mobil " . $_GET['brand'] . " warna mobil " . $_GET['warna'] . " tipe mobil " . $_GET['tipe'] . " harga mobil " . $_GET['harga'];
-  }
-} else {
-  echo "0 results";
-}
-$conn->close();
-?>
+            if(isset($_GET['id'])) {    
+                $id = $_GET['id'];
+                $query = "SELECT * FROM showroom_mobil WHERE id = $id";
+                $result = mysqli_query($connect, $query);
+   if (!$result) {
+        die('Query Error: ' . mysqli_error($connect));
+    }
+    if (mysqli_num_rows($result) > 0) {
+        while($row = mysqli_fetch_assoc($result)) {
+            $nama = $row['nama_mobil'];
+            $brand = $row['brand_mobil'];
+            $warna = $row['warna_mobil'];
+            $tipe = $row['tipe_mobil'];
+            $harga = $row['harga_mobil'];
 
+            echo "Nama Mobil: " . $nama . "<br>";
+            echo "Brand Mobil: " . $brand . "<br>";
+            echo "Warna Mobil: " . $warna . "<br>";
+            echo "Tipe Mobil: " . $tipe . "<br>";
+            echo "Harga Mobil: " . $harga . "<br>";
+        }
+    } else {
+        echo "Data tidak ditemukan";
+    }
 
-            //
+    mysqli_close($connect);
+
+            }
         ?>
         <div class="row">
             <center>
