@@ -4,16 +4,14 @@ require 'connect.php';
 
 // function untuk melakukan login
 function login($input) {
-
     // (1) Panggil variabel global $db dari file config
-    global $db
-    // 
+    global $db;
 
     // (2) Ambil nilai input dari form login
-        // a. Ambil nilai input email
-        $_POST
-        // b. Ambil nilai input password
-        
+    // a. Ambil nilai input email
+    $email = $_POST['email'];
+    // b. Ambil nilai input password
+    $password = $_POST['password'];
     // 
 
     // (3) Buat dan lakukan query untuk mencari data dengan email yang sama
@@ -21,55 +19,40 @@ function login($input) {
     $result = mysqli_query($db, $query);
     // 
 
-    // (4) Buatlah perkondisian ketika email ditemukan ( gunakan mysqli_num_rows == 1 )
-    if (mysqli_now_rows($result) == 1){
-   // a. Simpan hasil query menjadi array asosiatif menggunakan fungsi mysqli_fetch_assoc
+    // (4) Buatlah perkondisian ketika email ditemukan (gunakan mysqli_num_rows == 1)
+    if (mysqli_num_rows($result) == 1) {
+        // a. Simpan hasil query menjadi array asosiatif menggunakan fungsi mysqli_fetch_assoc
         $data = mysqli_fetch_assoc($result);
 
-        // 
-
         // b. Lakukan verifikasi password menggunakan fungsi password_verify
-        if(password_verify($password, $data['password'])){
-
+        if (password_verify($password, $data['password'])) {
             // c. Set variabel session dengan key login untuk menyimpan status login
             $_SESSION["login"] = true;
 
-            // d. Set variabel session dengan key id untuk menyimpan id user
-            $_SESSION["username"] = $data['username']
+            // d. Set variabel session dengan key username untuk menyimpan username user
+            $_SESSION["username"] = $data['username'];
 
-            //
-        }
-
- 
-        
             // e. Buat kondisi untuk mengecek apakah checkbox "remember me" terisi kemudian set cookie dan isi dengan id
-            if($insert) {
-                $_SESSION['message']
+            if (isset($input['remember'])) {
+                setcookie('id', $data['id'], time() + (86400 * 30), "/");
             }
             // 
-        // f. Buat kondisi else dan isi dengan variabel session dengan key message untuk meanmpilkan pesan error ketika password tidak sesuai
-    }else{
-        $_SESSION['message'] = 'password salah';
+        } else {
+            // f. Buat kondisi else dan isi dengan variabel session dengan key message untuk menampilkan pesan error ketika password tidak sesuai
+            $_SESSION['message'] = 'Password salah';
+            $_SESSION['color'] = 'danger';
+        }
+    } else {
+        // (5) Buat kondisi else untuk menampilkan pesan error ketika email tidak ditemukan
+        $_SESSION['message'] = 'Email tidak ditemukan';
         $_SESSION['color'] = 'danger';
-        // 
-    // 
-
-    // (5) Buat kondisi else, kemudian di dalamnya
-    //     Buat variabel session dengan key message untuk menampilkan pesan error ketika email tidak ditemukan
-}else{
-    $_SESSION['message'] = 'email tidak ditemukan';
-    $_SESSION['color'] = 'danger';
+    }
 }
-    // 
-}
-// 
 
 // function untuk fitur "Remember Me"
-function rememberMe($cookie)
-{
+function rememberMe($cookie){
     // (6) Panggil variabel global $db dari file config
-    global $db
-    // 
+    global $db;
 
     // (7) Ambil nilai cookie yang ada
     $id = $cookie['id'];
@@ -80,9 +63,8 @@ function rememberMe($cookie)
     $result = mysqli_query($db, $query);
     // 
 
-    // (9) Buatlah perkondisian ketika id ditemukan ( gunakan mysqli_num_rows == 1 )
-    if(mysqli_num_rows($result)  == 1){
-
+    // (9) Buatlah perkondisian ketika id ditemukan (gunakan mysqli_num_rows == 1)
+    if(mysqli_num_rows($result) == 1){
         // a. Simpan hasil query menjadi array asosiatif menggunakan fungsi mysqli_fetch_assoc
         $data = mysqli_fetch_assoc($result);
 
@@ -90,10 +72,7 @@ function rememberMe($cookie)
         $_SESSION["login"] = true;
         // c. Set variabel session dengan key id untuk menyimpan id user
         $_SESSION["username"] = $data['username'];
-        $_SESSION["id"] = $id['id'];
-    
-    // 
+        $_SESSION["id"] = $id['id']; // There's a mismatch here, use $id directly, not $id['id']
+    }
 }
-// 
-
 ?>
