@@ -1,5 +1,4 @@
 <?php 
-
 // (1) Hapus cookie dengan key id 
 session_unset();
 // 
@@ -9,13 +8,12 @@ session_start();
 //
 
 // (3) Hapus semua session yang berlangsung
-sesion_destry();
+session_destroy();
 //
 
 // (4) Lakukan redirect ke halaman login awal
-header('Location    : C:\xampp\htdocs\MODUL4ARSYAD\views\login.php');
+header('Location: ../login.php');
 //
 
 exit;
-
 ?>
