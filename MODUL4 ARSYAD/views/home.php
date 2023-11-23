@@ -10,11 +10,22 @@ if (!isset($_SESSION['login'])) {
 
 // (1) Buat variabel untuk menampung id user berdasarkan session dengan key id
 //     Kemudian lakukan query untuk mencari id user menggunakan variabel yang sudah dibuat
-
+if (isset($_SESSION['id'])) {
+    $userId = $_SESSION['id'];
 // 
+$query = "SELECT * FROM users WHERE id = $userId"; 
+$result = mysqli_query($connection, $query);
 
 // (2) Buatlah perkondisian ketika id ditemukan ( gunakan mysqli_num_rows == 1 )
-
+if ($result && mysqli_num_rows($result) == 1) {
+    $data = mysqli_fetch_assoc($result);
+} else {
+    $_SESSION['message'] = 'User tidak ditemukan.';
+    $_SESSION['color'] = 'danger';
+    header("Location: error.php");
+    exit();
+}
+}
     // a. Simpan hasil query menjadi array asosiatif menggunakan fungsi mysqli_fetch_assoc dalam variabel $data
 
     // 
